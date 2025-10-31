@@ -12,27 +12,16 @@ app.use(express.json());
 // 🧠 Initialize Gemini with API key
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// ✅ Keyword list to detect agriculture-related questions
-
-
-// 🧩 Helper function to check if question is agriculture related
-
-
 // 🚀 POST route for chat
 app.post("/chat", async (req, res) => {
   try {
     const { message } = req.body;
 
     if (!message || message.trim() === "") {
-      return res
-        .status(400)
-        .json({ error: "Please provide a valid message." });
+      return res.status(400).json({ error: "Please provide a valid message." });
     }
 
     console.log("🧠 Received:", message);
-
-    // 🛑 Restrict to agriculture only
-   
 
     // ✅ Use Gemini 2.5 Flash model
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
@@ -48,8 +37,9 @@ User: ${message}
 
     // 🧠 Generate response
     const result = await model.generateContent(prompt);
-    const reply = result.response.text();
+    let reply = result.response.text();
 
+    // 🪄 Capitalize first letter if needed
     if (reply && /^[a-z]/.test(reply.charAt(0))) {
       reply = reply.charAt(0).toUpperCase() + reply.slice(1);
     }
