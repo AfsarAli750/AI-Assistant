@@ -50,6 +50,10 @@ User: ${message}
     const result = await model.generateContent(prompt);
     const reply = result.response.text();
 
+    if (reply && /^[a-z]/.test(reply.charAt(0))) {
+      reply = reply.charAt(0).toUpperCase() + reply.slice(1);
+    }
+
     console.log("✅ Reply:", reply);
     res.json({ reply });
   } catch (error) {
